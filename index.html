@@ -1,758 +1,1251 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>Hamari Sukoon Wali Jagah 🕯️</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      --gold: #d4af37;
-      --gold-light: #e6c985;
-      --text: #3a3530;
-      --text-light: #6b655f;
-      --glass-bg: rgba(255, 255, 255, 0.88);
-      --glass-border: rgba(212, 175, 55, 0.3);
-    }
-
-    body {
-      background: linear-gradient(135deg, #f0e9e1 0%, #e2dcd3 100%);
-      font-family: 'Inter', sans-serif;
-      color: var(--text);
-      min-height: 100vh;
-      padding: 16px 12px 90px;
-      position: relative;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    .particle {
-      position: fixed;
-      width: 2px;
-      height: 2px;
-      background: var(--gold-light);
-      border-radius: 50%;
-      opacity: 0.4;
-      pointer-events: none;
-      animation: float 20s infinite ease-in-out;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
-      10%, 90% { opacity: 1; }
-      100% { transform: translateY(-100vh) translateX(80px); }
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
-      padding: 0 8px;
-    }
-
-    .nickname-display {
-      background: white;
-      border: 1px solid var(--glass-border);
-      border-radius: 50px;
-      padding: 10px 20px;
-      display: inline-block;
-      font-family: 'Playfair Display', serif;
-      font-size: 18px;
-      color: var(--gold);
-      margin-bottom: 12px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-      cursor: pointer;
-      transition: transform 0.3s;
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    h1 {
-      font-family: 'Playfair Display', serif;
-      font-weight: 600;
-      font-size: 26px;
-      color: var(--text);
-      line-height: 1.2;
-    }
-
-    /* Desktop Grid */
-    .wall {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
-      max-width: 100%;
-      margin: 0 auto;
-      padding: 0 6px;
-    }
-
-    @media (min-width: 768px) {
-      .wall {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 24px;
-        max-width: 1200px;
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>Hamari Sukoon Wali Jagah 🕯️</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
         padding: 0;
+        box-sizing: border-box;
       }
+
+      :root {
+        --gold: #d4af37;
+        --gold-light: #e6c985;
+        --text: #3a3530;
+        --text-light: #6b655f;
+        --glass-bg: rgba(255, 255, 255, 0.88);
+        --glass-border: rgba(212, 175, 55, 0.3);
+      }
+
       body {
-        padding: 24px 16px 80px;
+        background: linear-gradient(135deg, #f0e9e1 0%, #e2dcd3 100%);
+        font-family: "Inter", sans-serif;
+        color: var(--text);
+        min-height: 100vh;
+        padding: 16px 12px 90px;
+        position: relative;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
-      h1 {
-        font-size: 32px;
-      }
-      .nickname-display {
-        font-size: 20px;
-        padding: 10px 24px;
-      }
-    }
 
-    .card {
-      background: var(--glass-bg);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid var(--glass-border);
-      border-radius: 18px;
-      padding: 20px;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 5px 16px rgba(0,0,0,0.07);
-      min-height: 160px;
-    }
-
-    @media (min-width: 768px) {
-      .card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 10px 28px rgba(0,0,0,0.12);
-        border-color: rgba(212, 175, 55, 0.4);
-      }
-    }
-
-    /* Badges */
-    .type-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 10px;
-      padding: 2px 8px;
-      border-radius: 20px;
-      font-weight: 600;
-      z-index: 2;
-      background: rgba(212, 175, 55, 0.15);
-      color: var(--gold);
-    }
-    .badge-silent { background: #f0f0f0; color: #777; }
-    .badge-night { background: #e9e4f0; color: #6b5b95; }
-    .badge-sealed { background: #fff5e6; color: var(--gold); }
-
-    /* Content */
-    .note-content {
-      font-style: italic;
-      color: var(--text);
-      line-height: 1.7;
-      font-size: 15px;
-      position: relative;
-      word-break: break-word;
-    }
-    .note-content::before {
-      content: '"';
-      position: absolute;
-      top: -5px;
-      left: -5px;
-      font-size: 40px;
-      color: rgba(212, 175, 55, 0.08);
-      font-family: Georgia, serif;
-    }
-
-    .poetry-card {
-      font-family: 'Playfair Display', serif;
-      font-size: 17px;
-      color: var(--text);
-      line-height: 1.8;
-      letter-spacing: 0.4px;
-      position: relative;
-      word-break: break-word;
-    }
-    .poetry-card::before {
-      content: '✍️';
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      font-size: 18px;
-      opacity: 0.15;
-    }
-    .poetry-card::after {
-      content: "— जो ज़ुबान नहीं कह पाई";
-      display: block;
-      margin-top: 14px;
-      font-family: 'Inter', sans-serif;
-      font-size: 11px;
-      color: var(--text-light);
-      font-style: italic;
-      text-align: right;
-    }
-
-    /* Sealed */
-    .sealed-placeholder {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      height: 100%;
-      color: var(--text-light);
-      padding: 10px;
-    }
-    .sealed-placeholder i {
-      font-size: 36px;
-      margin-bottom: 10px;
-      opacity: 0.7;
-    }
-
-    /* Empty */
-    .empty-state {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 40px 16px;
-      color: var(--text-light);
-    }
-    .empty-state i {
-      font-size: 40px;
-      opacity: 0.6;
-      display: block;
-      margin-bottom: 16px;
-    }
-
-    /* Universal Input Panel */
-    .input-modal {
-      position: fixed;
-      z-index: 1000;
-    }
-
-    /* Mobile: Bottom Sheet */
-    @media (max-width: 767px) {
-      .input-modal {
-        bottom: 0;
-        left: 0;
-        right: 0;
-      }
-      .fab {
+      .particle {
         position: fixed;
-        bottom: 24px;
-        right: 24px;
-        width: 60px;
-        height: 60px;
-        z-index: 1001;
-      }
-      .input-panel {
-        background: white;
-        border-top-left-radius: 24px;
-        border-top-right-radius: 24px;
-        padding: 20px 16px 24px;
-        box-shadow: 0 -4px 24px rgba(0,0,0,0.12);
-        transform: translateY(100%);
-        transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        max-height: 80vh;
-        overflow-y: auto;
-      }
-      .input-panel.active {
-        transform: translateY(0);
-      }
-    }
-
-    /* Desktop: Floating Panel */
-    @media (min-width: 768px) {
-      .input-modal {
-        bottom: 20px;
-        right: 20px;
-      }
-      .fab {
-        width: 60px;
-        height: 60px;
+        width: 2px;
+        height: 2px;
+        background: var(--gold-light);
         border-radius: 50%;
+        opacity: 0.4;
+        pointer-events: none;
+        animation: float 20s infinite ease-in-out;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0) translateX(0);
+          opacity: 0;
+        }
+        10%,
+        90% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100vh) translateX(80px);
+        }
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+        padding: 0 8px;
+      }
+
+      .nickname-display {
+        background: white;
+        border: 1px solid var(--glass-border);
+        border-radius: 50px;
+        padding: 10px 20px;
+        display: inline-block;
+        font-family: "Playfair Display", serif;
+        font-size: 18px;
+        color: var(--gold);
+        margin-bottom: 12px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        cursor: pointer;
+        transition: transform 0.3s;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      h1 {
+        font-family: "Playfair Display", serif;
+        font-weight: 600;
+        font-size: 26px;
+        color: var(--text);
+        line-height: 1.2;
+      }
+
+      /* Desktop Grid */
+      .wall {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 0 6px;
+      }
+
+      @media (min-width: 768px) {
+        .wall {
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 24px;
+          max-width: 1200px;
+          padding: 0;
+        }
+        body {
+          padding: 24px 16px 80px;
+        }
+        h1 {
+          font-size: 32px;
+        }
+        .nickname-display {
+          font-size: 20px;
+          padding: 10px 24px;
+        }
+      }
+
+      .card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border);
+        border-radius: 18px;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 5px 16px rgba(0, 0, 0, 0.07);
+        min-height: 160px;
+      }
+
+      @media (min-width: 768px) {
+        .card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+          border-color: rgba(212, 175, 55, 0.4);
+        }
+      }
+
+      /* Badges */
+      .type-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 10px;
+        padding: 2px 8px;
+        border-radius: 20px;
+        font-weight: 600;
+        z-index: 2;
+        background: rgba(212, 175, 55, 0.15);
+        color: var(--gold);
+      }
+      .badge-silent {
+        background: #f0f0f0;
+        color: #777;
+      }
+      .badge-night {
+        background: #e9e4f0;
+        color: #6b5b95;
+      }
+      .badge-sealed {
+        background: #fff5e6;
+        color: var(--gold);
+      }
+
+      /* Content */
+      .note-content {
+        font-style: italic;
+        color: var(--text);
+        line-height: 1.7;
+        font-size: 15px;
+        position: relative;
+        word-break: break-word;
+      }
+      .note-content::before {
+        content: '"';
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        font-size: 40px;
+        color: rgba(212, 175, 55, 0.08);
+        font-family: Georgia, serif;
+      }
+
+      .poetry-card {
+        font-family: "Playfair Display", serif;
+        font-size: 17px;
+        color: var(--text);
+        line-height: 1.8;
+        letter-spacing: 0.4px;
+        position: relative;
+        word-break: break-word;
+      }
+      .poetry-card::before {
+        content: "✍️";
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        font-size: 18px;
+        opacity: 0.15;
+      }
+      .poetry-card::after {
+        content: "— जो ज़ुबान नहीं कह पाई";
+        display: block;
+        margin-top: 14px;
+        font-family: "Inter", sans-serif;
+        font-size: 11px;
+        color: var(--text-light);
+        font-style: italic;
+        text-align: right;
+      }
+
+      /* Sealed */
+      .sealed-placeholder {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        height: 100%;
+        color: var(--text-light);
+        padding: 10px;
+      }
+      .sealed-placeholder i {
+        font-size: 36px;
+        margin-bottom: 10px;
+        opacity: 0.7;
+      }
+
+      /* Empty */
+      .empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 40px 16px;
+        color: var(--text-light);
+      }
+      .empty-state i {
+        font-size: 40px;
+        opacity: 0.6;
+        display: block;
+        margin-bottom: 16px;
+      }
+
+      /* Universal Input Panel */
+      .input-modal {
+        position: fixed;
+        z-index: 1000;
+      }
+
+      /* Mobile: Bottom Sheet */
+      @media (max-width: 767px) {
+        .input-modal {
+          bottom: 0;
+          left: 0;
+          right: 0;
+        }
+        .fab {
+          position: fixed;
+          bottom: 24px;
+          right: 24px;
+          width: 60px;
+          height: 60px;
+          z-index: 1001;
+        }
+        .input-panel {
+          background: white;
+          border-top-left-radius: 24px;
+          border-top-right-radius: 24px;
+          padding: 20px 16px 24px;
+          box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
+          transform: translateY(100%);
+          transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          max-height: 80vh;
+          overflow-y: auto;
+        }
+        .input-panel.active {
+          transform: translateY(0);
+        }
+      }
+
+      /* Desktop: Floating Panel */
+      @media (min-width: 768px) {
+        .input-modal {
+          bottom: 20px;
+          right: 20px;
+        }
+        .fab {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          background: var(--gold);
+          color: white;
+          border: none;
+          font-size: 24px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 16px rgba(212, 175, 55, 0.4);
+          transition: all 0.3s;
+          z-index: 1001;
+        }
+        .fab:hover {
+          transform: scale(1.1);
+          box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
+        }
+        .input-panel {
+          position: absolute;
+          bottom: 80px;
+          right: 0;
+          width: 360px;
+          background: white;
+          border-radius: 18px;
+          padding: 20px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+          transform: translateY(20px);
+          opacity: 0;
+          visibility: hidden;
+          transition: all 0.4s;
+        }
+        .input-panel.active {
+          transform: translateY(0);
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+
+      .input-panel h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 18px;
+        margin-bottom: 14px;
+        color: var(--text);
+        text-align: center;
+      }
+
+      .mode-tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+        background: #f9f7f3;
+        padding: 6px;
+        border-radius: 12px;
+      }
+      .mode-tab {
+        flex: 1;
+        padding: 10px 4px;
+        font-size: 14px;
+        border: none;
+        border-radius: 10px;
+        background: white;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      .mode-tab.active {
         background: var(--gold);
         color: white;
-        border: none;
-        font-size: 24px;
+      }
+
+      .type-selector {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .type-btn {
+        padding: 6px 14px;
+        font-size: 13px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        background: white;
         cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      .type-btn.active {
+        border-color: var(--gold);
+        background: rgba(212, 175, 55, 0.15);
+        font-weight: 600;
+        color: var(--gold);
+      }
+
+      textarea,
+      input {
+        width: 100%;
+        padding: 14px;
+        border: 1px solid #ddd;
+        border-radius: 14px;
+        font-family: "Inter", sans-serif;
+        font-size: 16px;
+        margin-bottom: 16px;
+        transition: border 0.3s;
+      }
+      textarea {
+        min-height: 100px;
+        resize: vertical;
+      }
+      textarea:focus,
+      input:focus {
+        outline: none;
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+      }
+
+      .btn-row {
+        display: flex;
+        gap: 12px;
+      }
+      .btn {
+        flex: 1;
+        padding: 14px;
+        border: none;
+        border-radius: 14px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.2s;
+      }
+      .btn-outline {
+        background: #f8f6f2;
+        color: var(--text);
+      }
+      .btn-fill {
+        background: var(--gold);
+        color: white;
+      }
+      .btn:hover {
+        opacity: 0.95;
+      }
+
+      .saved-indicator {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #4caf50;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 30px;
+        font-size: 15px;
+        font-weight: 600;
+        opacity: 0;
+        transform: translateX(120px);
+        transition: all 0.4s;
+        z-index: 2000;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+      }
+      .saved-indicator.show {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      /* Safe areas for iPhone */
+      @supports (padding-top: env(safe-area-inset-top)) {
+        @media (max-width: 767px) {
+          body {
+            padding-bottom: calc(90px + env(safe-area-inset-bottom));
+          }
+          .fab {
+            bottom: calc(24px + env(safe-area-inset-bottom));
+          }
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="verifyGate"
+      style="
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(6px);
+        z-index: 9999;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 4px 16px rgba(212, 175, 55, 0.4);
-        transition: all 0.3s;
-        z-index: 1001;
-      }
-      .fab:hover {
-        transform: scale(1.1);
-        box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
-      }
-      .input-panel {
-        position: absolute;
-        bottom: 80px;
-        right: 0;
-        width: 360px;
-        background: white;
-        border-radius: 18px;
-        padding: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        transform: translateY(20px);
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.4s;
-      }
-      .input-panel.active {
-        transform: translateY(0);
-        opacity: 1;
-        visibility: visible;
-      }
-    }
+      "
+    >
+      <div
+        style="
+          width: 90%;
+          max-width: 370px;
+          background: white;
+          border-radius: 20px;
+          padding: 24px;
+          text-align: center;
+          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+        "
+      >
+        <h2
+          style="
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 10px;
+            font-size: 22px;
+          "
+        >
+          Verification Needed
+        </h2>
+        <p style="font-size: 13px; color: #555; margin-bottom: 18px">
+          Bas chhoti si verification… naam + location + face presence. Kuch bhi
+          pose nahi karna — relax.
+        </p>
 
-    .input-panel h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 18px;
-      margin-bottom: 14px;
-      color: var(--text);
-      text-align: center;
-    }
+        <input
+          id="gateName"
+          type="text"
+          placeholder="Your Name"
+          style="
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            margin-bottom: 12px;
+          "
+        />
 
-    .mode-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-      background: #f9f7f3;
-      padding: 6px;
-      border-radius: 12px;
-    }
-    .mode-tab {
-      flex: 1;
-      padding: 10px 4px;
-      font-size: 14px;
-      border: none;
-      border-radius: 10px;
-      background: white;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
-    .mode-tab.active {
-      background: var(--gold);
-      color: white;
-    }
+        <button
+          id="locBtn"
+          style="
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            margin-bottom: 8px;
+            background: #d4af37;
+            color: white;
+            font-weight: 600;
+          "
+        >
+          📍 Verify Location
+        </button>
+        <div
+          id="locStatus"
+          style="font-size: 12px; margin-bottom: 16px; color: #555"
+        >
+          Not verified yet
+        </div>
 
-    .type-selector {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .type-btn {
-      padding: 6px 14px;
-      font-size: 13px;
-      border: 1px solid #ddd;
-      border-radius: 20px;
-      background: white;
-      cursor: pointer;
-      transition: all 0.2s;
-      white-space: nowrap;
-    }
-    .type-btn.active {
-      border-color: var(--gold);
-      background: rgba(212, 175, 55, 0.15);
-      font-weight: 600;
-      color: var(--gold);
-    }
+        <button
+          id="camBtn"
+          style="
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            margin-bottom: 8px;
+            background: #eaeaea;
+            font-weight: 600;
+          "
+        >
+          🤳 Start Face Check
+        </button>
+        <div
+          id="camStatus"
+          style="font-size: 12px; margin-bottom: 16px; color: #555"
+        >
+          Not captured
+        </div>
 
-    textarea, input {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #ddd;
-      border-radius: 14px;
-      font-family: 'Inter', sans-serif;
-      font-size: 16px;
-      margin-bottom: 16px;
-      transition: border 0.3s;
-    }
-    textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-    textarea:focus, input:focus {
-      outline: none;
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
-    }
+        <!-- Camera preview (must be VISIBLE to be allowed by browser) -->
+        <video
+          id="camPreview"
+          autoplay
+          playsinline
+          style="width: 1px; height: 1px; opacity: 0.01"
+        ></video>
 
-    .btn-row {
-      display: flex;
-      gap: 12px;
-    }
-    .btn {
-      flex: 1;
-      padding: 14px;
-      border: none;
-      border-radius: 14px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-    .btn-outline {
-      background: #f8f6f2;
-      color: var(--text);
-    }
-    .btn-fill {
-      background: var(--gold);
-      color: white;
-    }
-    .btn:hover {
-      opacity: 0.95;
-    }
+        <button
+          id="enterBtn"
+          disabled
+          style="
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            background: #888;
+            color: white;
+            font-weight: 600;
+          "
+        >
+          🔒 Enter
+        </button>
+      </div>
+    </div>
 
-    .saved-indicator {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #4caf50;
-      color: white;
-      padding: 12px 24px;
-      border-radius: 30px;
-      font-size: 15px;
-      font-weight: 600;
-      opacity: 0;
-      transform: translateX(120px);
-      transition: all 0.4s;
-      z-index: 2000;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.22);
-    }
-    .saved-indicator.show {
-      opacity: 1;
-      transform: translateX(0);
-    }
+    <div class="saved-indicator" id="savedIndicator">Saved ✓</div>
+    <button
+      id="retryBtn"
+      title="Retry pending selfie uploads"
+      style="
+        position: fixed;
+        top: 20px;
+        right: 120px;
+        z-index: 2000;
+        padding: 8px 12px;
+        border-radius: 12px;
+        background: #f2f2f2;
+        border: 1px solid #ddd;
+        display: none;
+      "
+    >
+      Retry uploads
+    </button>
 
-    /* Safe areas for iPhone */
-    @supports (padding-top: env(safe-area-inset-top)) {
-      @media (max-width: 767px) {
-        body {
-          padding-bottom: calc(90px + env(safe-area-inset-bottom));
+    <div class="header">
+      <div class="nickname-display" id="nicknameDisplay">Yahan dabao...</div>
+      <h1>Hamari Sukoon Wali Jagah</h1>
+    </div>
+
+    <div class="wall" id="wall"></div>
+
+    <!-- Unified Input System -->
+    <div class="input-modal">
+      <div class="input-panel" id="inputPanel">
+        <div class="mode-tabs">
+          <button class="mode-tab active" data-mode="note">📝 Note</button>
+          <button class="mode-tab" data-mode="poetry">🖋️ Poetry</button>
+        </div>
+
+        <div class="type-selector" id="noteTypes">
+          <button class="type-btn active" data-type="normal">💬 Baatein</button>
+          <button class="type-btn" data-type="silent">🤫 Quiet</button>
+          <button class="type-btn" data-type="night">🌙 Raat</button>
+          <button class="type-btn" data-type="sealed">🔒 Sealed</button>
+        </div>
+
+        <textarea
+          id="entryText"
+          placeholder="जो दिल ने कहा..."
+          rows="4"
+        ></textarea>
+
+        <input type="date" id="unlockDate" style="display: none" />
+
+        <div class="btn-row">
+          <button class="btn btn-outline" id="cancelBtn">Cancel</button>
+          <button class="btn btn-fill" id="saveBtn">Save</button>
+        </div>
+      </div>
+      <button class="fab" id="fab">+</button>
+    </div>
+
+    <script type="module">
+      import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+      const supabaseUrl = "https://gwpydutbemgxxxbtxgmj.supabase.co";
+      const supabaseAnonKey =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3cHlkdXRiZW1neHh4YnR4Z21qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1ODM1NTUsImV4cCI6MjA4MDE1OTU1NX0.YourAnonKeyHere"; // USE ANON KEY, NOT SERVICE ROLE!
+      const supabaseServiceKey =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3cHlkdXRiZW1neHh4YnR4Z21qIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NDU4MzU1NSwiZXhwIjoyMDgwMTU5NTU1fQ.9dz8Yd9zxp7qQXWtpZXrean1s9pbiavXjXImI5rxLZo";
+
+      // Create client with ANON key for client-side operations
+      const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+      const API =
+        "https://gwpydutbemgxxxbtxgmj.supabase.co/functions/v1/smart-action";
+
+      // Fixed API functions with proper error handling
+      async function apiGet(path) {
+        try {
+          const res = await fetch(`${API}${path}`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${supabaseAnonKey}`,
+              "Content-Type": "application/json",
+              apikey: supabaseAnonKey,
+            },
+          });
+
+          if (!res.ok) {
+            console.error(
+              `API GET ${path} failed:`,
+              res.status,
+              res.statusText
+            );
+            const text = await res.text();
+            console.error("Response:", text);
+            return {
+              data: null,
+              error: { message: `Request failed: ${res.status}` },
+            };
+          }
+
+          const json = await res.json();
+          console.log(`API GET ${path} success:`, json);
+          return json;
+        } catch (err) {
+          console.error(`API GET ${path} error:`, err);
+          return { data: null, error: err };
         }
-        .fab {
-          bottom: calc(24px + env(safe-area-inset-bottom));
+      }
+
+      async function apiPost(path, body) {
+        try {
+          const res = await fetch(`${API}${path}`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${supabaseAnonKey}`,
+              "Content-Type": "application/json",
+              apikey: supabaseAnonKey,
+            },
+            body: JSON.stringify(body),
+          });
+
+          if (!res.ok) {
+            console.error(
+              `API POST ${path} failed:`,
+              res.status,
+              res.statusText
+            );
+            const text = await res.text();
+            console.error("Response:", text);
+            return {
+              data: null,
+              error: { message: `Request failed: ${res.status}` },
+            };
+          }
+
+          const json = await res.json();
+          console.log(`API POST ${path} success:`, json);
+          return json;
+        } catch (err) {
+          console.error(`API POST ${path} error:`, err);
+          return { data: null, error: err };
         }
       }
-    }
-  </style>
-</head>
-<body>
 
-<div class="saved-indicator" id="savedIndicator">Saved ✓</div>
+      let lastLatitude = null;
+      let lastLongitude = null;
 
-<div class="header">
-  <div class="nickname-display" id="nicknameDisplay">Yahan dabao...</div>
-  <h1>Hamari Sukoon Wali Jagah</h1>
-</div>
+      // DOM elements
+      const wall = document.getElementById("wall");
+      const fab = document.getElementById("fab");
+      const inputPanel = document.getElementById("inputPanel");
+      const entryText = document.getElementById("entryText");
+      const unlockDate = document.getElementById("unlockDate");
+      const saveBtn = document.getElementById("saveBtn");
+      const cancelBtn = document.getElementById("cancelBtn");
+      const modeTabs = document.querySelectorAll(".mode-tab");
+      const typeBtns = document.querySelectorAll(".type-btn");
+      const noteTypes = document.getElementById("noteTypes");
+      const nicknameDisplay = document.getElementById("nicknameDisplay");
 
-<div class="wall" id="wall"></div>
+      // Gate elements
+      const verifyGate = document.getElementById("verifyGate");
+      const gateName = document.getElementById("gateName");
+      const locBtn = document.getElementById("locBtn");
+      const locStatus = document.getElementById("locStatus");
+      const camBtn = document.getElementById("camBtn");
+      const camStatus = document.getElementById("camStatus");
+      const enterBtn = document.getElementById("enterBtn");
+      const camPreview = document.getElementById("camPreview");
 
-<!-- Unified Input System -->
-<div class="input-modal">
-  <div class="input-panel" id="inputPanel">
-    <div class="mode-tabs">
-      <button class="mode-tab active" data-mode="note">📝 Note</button>
-      <button class="mode-tab" data-mode="poetry">🖋️ Poetry</button>
-    </div>
+      // Helper function
+      function base64ToBlob(base64, type = "image/jpeg") {
+        const byteCharacters = atob(base64.split(",")[1]);
+        const byteArrays = [];
 
-    <div class="type-selector" id="noteTypes">
-      <button class="type-btn active" data-type="normal">💬 Baatein</button>
-      <button class="type-btn" data-type="silent">🤫 Quiet</button>
-      <button class="type-btn" data-type="night">🌙 Raat</button>
-      <button class="type-btn" data-type="sealed">🔒 Sealed</button>
-    </div>
-
-    <textarea id="entryText" placeholder="जो दिल ने कहा..." rows="4"></textarea>
-    
-    <input type="date" id="unlockDate" style="display:none;" />
-
-    <div class="btn-row">
-      <button class="btn btn-outline" id="cancelBtn">Cancel</button>
-      <button class="btn btn-fill" id="saveBtn">Save</button>
-    </div>
-  </div>
-  <button class="fab" id="fab">+</button>
-</div>
-
-<script type="module">
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-  const supabaseUrl = 'https://gwpydutbemgxxxbtxgmj.supabase.co';
-  const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3cHlkdXRiZW1neHh4YnR4Z21qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1ODM1NTUsImV4cCI6MjA4MDE1OTU1NX0.PmIMiIsQtigqSUUeaAcKtmsYfE5ake6dvQMRO4YV91w';
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-  // DOM
-  const wall = document.getElementById('wall');
-  const fab = document.getElementById('fab');
-  const inputPanel = document.getElementById('inputPanel');
-  const entryText = document.getElementById('entryText');
-  const unlockDate = document.getElementById('unlockDate');
-  const saveBtn = document.getElementById('saveBtn');
-  const cancelBtn = document.getElementById('cancelBtn');
-  const modeTabs = document.querySelectorAll('.mode-tab');
-  const typeBtns = document.querySelectorAll('.type-btn');
-  const noteTypes = document.getElementById('noteTypes');
-  const nicknameDisplay = document.getElementById('nicknameDisplay');
-
-  // State
-  let currentMode = 'note';
-  let currentNoteType = 'normal';
-
-  // Nicknames
-  const nicknames = [
-    "Meri Sukoon", "Silent Magic", "Yaad ki Raani", "Little Storm",
-    "Tumhara Phir?", "Meri Saanth", "My 'Aapko Pata Nhi'",
-    "Angry Switch", "Koot Dungi Express", "Soft Chaos",
-    "Silent Symphony", "Meri Shaanti", "Calendar Queen",
-    "Dil Ka Haal", "Pyaari Si Musibat", "Meethi Gussa",
-    "Chup Chaap Toofan", "Meri Zindagi"
-  ];
-
-  // Nickname
-  function generateNickname() {
-    const name = nicknames[Math.floor(Math.random() * nicknames.length)];
-    nicknameDisplay.textContent = `"${name}"`;
-  }
-  nicknameDisplay.addEventListener('click', generateNickname);
-  generateNickname();
-
-  // Open panel
-  fab.addEventListener('click', () => {
-    inputPanel.classList.add('active');
-    // Auto-focus on mobile
-    if (window.innerWidth <= 767) {
-      setTimeout(() => entryText.focus(), 300);
-    }
-  });
-
-  // Close panel
-  cancelBtn.addEventListener('click', () => {
-    inputPanel.classList.remove('active');
-  });
-
-  // Close on outside click (desktop)
-  document.addEventListener('click', (e) => {
-    if (window.innerWidth > 767 && inputPanel.classList.contains('active') && 
-        !inputPanel.contains(e.target) && e.target !== fab) {
-      inputPanel.classList.remove('active');
-    }
-  });
-
-  // Mode tabs
-  modeTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      modeTabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      currentMode = tab.dataset.mode;
-
-      if (currentMode === 'note') {
-        noteTypes.style.display = 'flex';
-        updateNoteType('normal');
-      } else {
-        noteTypes.style.display = 'none';
-        entryText.placeholder = "कुछ लिखो... जो दिल ने कहा, पर ज़ुबान ने नहीं";
-        unlockDate.style.display = 'none';
-        entryText.disabled = false;
+        for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+          const slice = byteCharacters.slice(offset, offset + 512);
+          const byteNumbers = new Array(slice.length);
+          for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          byteArrays.push(byteArray);
+        }
+        return new Blob(byteArrays, { type });
       }
-    });
-  });
 
-  // Note types
-  function updateNoteType(type) {
-    typeBtns.forEach(btn => {
-      if (btn.dataset.type === type) btn.classList.add('active');
-      else btn.classList.remove('active');
-    });
-    currentNoteType = type;
+      // Fixed upload function
+      async function uploadSelfieToSupabase(base64, name, latitude, longitude) {
+        try {
+          const clean = name.replace(/\s+/g, "_");
+          const filename = `${Date.now()}_${clean}.jpg`;
+          const blob = base64ToBlob(base64);
 
-    if (type === 'sealed') {
-      unlockDate.style.display = 'block';
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      unlockDate.min = tomorrow.toISOString().split('T')[0];
-    } else {
-      unlockDate.style.display = 'none';
-    }
+          const { data, error } = await supabase.storage
+            .from("Selfies")
+            .upload(filename, blob, {
+              contentType: "image/jpeg",
+              upsert: false,
+            });
 
-    if (type === 'night') {
-      const now = new Date();
-      const hour = now.getHours();
-      if (hour < 20 && hour >= 6) {
-        entryText.placeholder = "🌙 Raat ki diary sirf 8PM–6AM likhi jaati hai";
-        entryText.disabled = true;
-      } else {
-        entryText.placeholder = "आज रात का ख्याल...";
-        entryText.disabled = false;
+          if (error) {
+            console.error("Upload error:", error);
+            return null;
+          }
+
+          const { data: urlData } = supabase.storage
+            .from("Selfies")
+            .getPublicUrl(filename);
+
+          console.log("Upload success:", urlData.publicUrl);
+          return urlData.publicUrl;
+        } catch (e) {
+          console.error("Selfie upload exception:", e);
+          return null;
+        }
       }
-    } else {
-      entryText.disabled = false;
-      entryText.placeholder = "जो दिल ने कहा...";
-    }
-  }
 
-  typeBtns.forEach(btn => {
-    btn.addEventListener('click', () => updateNoteType(btn.dataset.type));
-  });
+      // Gate state
+      let hasLocation = false;
+      let hasSelfie = false;
+      let selfieData = null;
 
-  // Save
-  saveBtn.addEventListener('click', async () => {
-    const text = entryText.value.trim();
-    if (!text) return;
+      function updateGate() {
+        const nameOK = gateName.value.trim().length > 0;
 
-    let error;
-    if (currentMode === 'note') {
-      if (currentNoteType === 'night') {
-        const now = new Date();
-        const hour = now.getHours();
-        if (hour < 20 && hour >= 6) {
-          alert("🌙 Raat ki diary sirf raat mein (8PM–6AM) likhi ja sakti hai.");
+        if (nameOK && hasLocation && hasSelfie) {
+          enterBtn.disabled = false;
+          enterBtn.style.background = "#d4af37";
+        } else {
+          enterBtn.disabled = true;
+          enterBtn.style.background = "#888";
+        }
+      }
+
+      // Location handler
+      locBtn.onclick = () => {
+        locStatus.textContent = "Detecting…";
+
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            hasLocation = true;
+            lastLatitude = pos.coords.latitude;
+            lastLongitude = pos.coords.longitude;
+            locStatus.textContent = `✔️ ${pos.coords.latitude.toFixed(
+              4
+            )}, ${pos.coords.longitude.toFixed(4)}`;
+            locStatus.style.color = "green";
+            updateGate();
+          },
+          (err) => {
+            console.error("Location error:", err);
+            locStatus.textContent = "❌ Permission denied";
+            locStatus.style.color = "red";
+            hasLocation = false;
+            updateGate();
+          }
+        );
+      };
+
+      // Camera handler
+      camBtn.onclick = async () => {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "user" },
+            audio: false,
+          });
+          camPreview.srcObject = stream;
+          camStatus.textContent = "Camera active… capturing natural frame";
+          camStatus.style.color = "#555";
+
+          setTimeout(() => {
+            const video = camPreview;
+            const canvas = document.createElement("canvas");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(video, 0, 0);
+
+            selfieData = canvas.toDataURL("image/jpeg");
+            hasSelfie = true;
+
+            camStatus.textContent = "✔️ Face captured";
+            camStatus.style.color = "green";
+
+            stream.getTracks().forEach((t) => t.stop());
+            updateGate();
+          }, 1500);
+        } catch (err) {
+          console.error("Camera error:", err);
+          camStatus.textContent = "❌ Camera denied";
+          camStatus.style.color = "red";
+          hasSelfie = false;
+          updateGate();
+        }
+      };
+
+      // Enter button handler
+      enterBtn.onclick = async () => {
+        const nameOK = gateName.value.trim().length > 0;
+
+        if (!nameOK || !hasLocation || !hasSelfie) {
+          alert("Please complete all verification steps");
           return;
         }
-      }
 
-      let insertData = { message: text, type: currentNoteType };
-      if (currentNoteType === 'sealed') {
-        const date = unlockDate.value;
-        if (!date) {
-          alert("🔒 Kripya kholne ki tarikh chunen.");
-          return;
+        enterBtn.disabled = true;
+        enterBtn.textContent = "Saving...";
+
+        const name = gateName.value.trim();
+        const lat = lastLatitude;
+        const lon = lastLongitude;
+
+        try {
+          // Upload selfie
+          let selfieURL = await uploadSelfieToSupabase(
+            selfieData,
+            name,
+            lat,
+            lon
+          );
+
+          // Save visitor log
+          const visitorData = {
+            name,
+            selfie_url: selfieURL,
+            latitude: lat,
+            longitude: lon,
+          };
+
+          const result = await apiPost("?route=visitor", visitorData);
+
+          if (result.error) {
+            console.error("Visitor save error:", result.error);
+            alert("Failed to save visitor record. Check console.");
+          } else {
+            console.log("Visitor saved successfully");
+            nicknameDisplay.textContent = `"${name}"`;
+            verifyGate.style.display = "none";
+            await renderWall();
+          }
+        } catch (err) {
+          console.error("Enter error:", err);
+          alert("An error occurred. Check console.");
+        } finally {
+          enterBtn.disabled = false;
+          enterBtn.textContent = "🔒 Enter";
         }
-        insertData.unlock_date = date;
-      }
-      ({ error } = await supabase.from('notes').insert([insertData]));
-    } else {
-      ({ error } = await supabase.from('poetry').insert([{ lines: text }]));  
-    }
+      };
 
-    if (!error) {
-      entryText.value = '';
-      inputPanel.classList.remove('active');
-      showSaved();
-      renderWall();
-    }
-  });
+      // App state
+      let currentMode = "note";
+      let currentNoteType = "normal";
 
-  // Show saved
-  function showSaved() {
-    const el = document.getElementById('savedIndicator');
-    el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), 2200);
-  }
+      // Nicknames
+      const nicknames = [
+        "Meri Sukoon",
+        "Silent Magic",
+        "Yaad ki Raani",
+        "Little Storm",
+        "Tumhara Phir?",
+        "Meri Saanth",
+        "My 'Aapko Pata Nhi'",
+        "Angry Switch",
+        "Koot Dungi Express",
+        "Soft Chaos",
+        "Silent Symphony",
+        "Meri Shaanti",
+        "Calendar Queen",
+        "Dil Ka Haal",
+        "Pyaari Si Musibat",
+        "Meethi Gussa",
+        "Chup Chaap Toofan",
+        "Meri Zindagi",
+      ];
 
-  // Create cards
-  function createNoteCard(item) {
-    const card = document.createElement('div');
-    card.className = 'card';
-    
-    if (item.type === 'silent') card.style.background = 'rgba(249, 247, 243, 0.9)';
-    else if (item.type === 'night') card.style.background = 'rgba(245, 242, 236, 0.9)';
-    else if (item.type === 'sealed') card.style.background = 'rgba(252, 250, 244, 0.9)';
-
-    if (item.type !== 'normal') {
-      const badge = document.createElement('div');
-      badge.className = `type-badge badge-${item.type}`;
-      badge.textContent = item.type === 'silent' ? '🤫' : item.type === 'night' ? '🌙' : '🔒';
-      card.appendChild(badge);
-    }
-
-    if (item.type === 'sealed') {
-      const today = new Date();
-      const unlock = new Date(item.unlock_date);
-      if (unlock > today) {
-        const div = document.createElement('div');
-        div.className = 'sealed-placeholder';
-        const dateStr = new Date(item.unlock_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
-        div.innerHTML = `<i>🔒</i><div>Is sandesh ko kholne ke liye<br>${dateStr} ka intezaar hai</div>`;
-        card.appendChild(div);
-      } else {
-        const content = document.createElement('div');
-        content.className = 'note-content';
-        content.textContent = item.message;
-        card.appendChild(content);
-      }
-    } else {
-      const content = document.createElement('div');
-      content.className = 'note-content';
-      content.textContent = item.message;
-      card.appendChild(content);
-    }
-    return card;
-  }
-
-  function createPoetryCard(item) {
-    const card = document.createElement('div');
-    card.className = 'card poetry-card';
-    card.textContent = item.lines;
-    return card;
-  }
-
-  // Render
-  async function renderWall() {
-    wall.innerHTML = '';
-
-    try {
-      const [notesRes, poetryRes] = await Promise.all([
-        supabase.from('notes').select('*').order('created_at', { ascending: false }),
-        supabase.from('poetry').select('*').order('created_at', { ascending: false })
-      ]);
-
-      const notes = (notesRes.data || []).map(n => ({ ...n, source: 'note' }));
-      const poetry = (poetryRes.data || []).map(p => ({ ...p, source: 'poetry' }));
-
-      const all = [...notes, ...poetry].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
-      if (all.length === 0) {
-        wall.innerHTML = `<div class="empty-state"><i>🕯️</i><p>यहाँ अभी खामोशी है...<br>पर तुम्हारी पहली बात इसे जीवंत कर देगी</p></div>`;
-        return;
+      function generateNickname() {
+        const name = nicknames[Math.floor(Math.random() * nicknames.length)];
+        nicknameDisplay.textContent = `"${name}"`;
       }
 
-      all.forEach(item => {
-        const card = item.source === 'poetry' 
-          ? createPoetryCard(item) 
-          : createNoteCard(item);
-        wall.appendChild(card);
+      nicknameDisplay.addEventListener("click", generateNickname);
+      generateNickname();
+
+      // Panel controls
+      fab.addEventListener("click", () => {
+        inputPanel.classList.add("active");
+        if (window.innerWidth <= 767) {
+          setTimeout(() => entryText.focus(), 300);
+        }
       });
-    } catch (err) {
-      console.error('Render error:', err);
-      wall.innerHTML = `<div class="empty-state">कनेक्शन में दिक्कत... कृपया बाद में कोशिश करें।</div>`;
-    }
-  }
 
-  // Realtime
-  supabase
-    .channel('wall-updates')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'notes' }, () => renderWall())
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'poetry' }, () => renderWall())
-    .subscribe();
+      cancelBtn.addEventListener("click", () => {
+        inputPanel.classList.remove("active");
+      });
 
-  // Particles
-  for (let i = 0; i < 10; i++) {
-    const p = document.createElement('div');
-    p.className = 'particle';
-    p.style.left = `${Math.random() * 100}%`;
-    p.style.animationDelay = `${Math.random() * 20}s`;
-    p.style.animationDuration = `${20 + Math.random() * 10}s`;
-    document.body.appendChild(p);
-  }
+      document.addEventListener("click", (e) => {
+        if (
+          window.innerWidth > 767 &&
+          inputPanel.classList.contains("active") &&
+          !inputPanel.contains(e.target) &&
+          e.target !== fab
+        ) {
+          inputPanel.classList.remove("active");
+        }
+      });
 
-  // Init
-  renderWall();
-</script>
+      // Mode tabs
+      modeTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          modeTabs.forEach((t) => t.classList.remove("active"));
+          tab.classList.add("active");
+          currentMode = tab.dataset.mode;
 
-</body>
+          if (currentMode === "note") {
+            noteTypes.style.display = "flex";
+            updateNoteType("normal");
+          } else {
+            noteTypes.style.display = "none";
+            entryText.placeholder =
+              "कुछ लिखो... जो दिल ने कहा, पर ज़ुबान ने नहीं";
+            unlockDate.style.display = "none";
+            entryText.disabled = false;
+          }
+        });
+      });
+
+      // Note types
+      function updateNoteType(type) {
+        typeBtns.forEach((btn) => {
+          if (btn.dataset.type === type) btn.classList.add("active");
+          else btn.classList.remove("active");
+        });
+        currentNoteType = type;
+
+        if (type === "sealed") {
+          unlockDate.style.display = "block";
+          const tomorrow = new Date();
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          unlockDate.min = tomorrow.toISOString().split("T")[0];
+        } else {
+          unlockDate.style.display = "none";
+        }
+
+        if (type === "night") {
+          const now = new Date();
+          const hour = now.getHours();
+          if (hour < 20 && hour >= 6) {
+            entryText.placeholder =
+              "🌙 Raat ki diary sirf 8PM–6AM likhi jaati hai";
+            entryText.disabled = true;
+          } else {
+            entryText.placeholder = "आज रात का ख्याल...";
+            entryText.disabled = false;
+          }
+        } else {
+          entryText.disabled = false;
+          entryText.placeholder = "जो दिल ने कहा...";
+        }
+      }
+
+      typeBtns.forEach((btn) => {
+        btn.addEventListener("click", () => updateNoteType(btn.dataset.type));
+      });
+
+      // Save handler
+      saveBtn.addEventListener("click", async () => {
+        const text = entryText.value.trim();
+        if (!text) return;
+
+        saveBtn.disabled = true;
+        saveBtn.textContent = "Saving...";
+
+        try {
+          let result;
+
+          if (currentMode === "note") {
+            if (currentNoteType === "night") {
+              const now = new Date();
+              const hour = now.getHours();
+              if (hour < 20 && hour >= 6) {
+                alert(
+                  "🌙 Raat ki diary sirf raat mein (8PM–6AM) likhi ja sakti hai."
+                );
+                return;
+              }
+            }
+
+            let insertData = { message: text, type: currentNoteType };
+            if (currentNoteType === "sealed") {
+              const date = unlockDate.value;
+              if (!date) {
+                alert("🔒 Kripya kholne ki tarikh chunen.");
+                return;
+              }
+              insertData.unlock_date = date;
+            }
+            result = await apiPost("?route=notes", insertData);
+          } else {
+            result = await apiPost("?route=notes", { lines: text });
+          }
+
+          if (!result.error) {
+            entryText.value = "";
+            inputPanel.classList.remove("active");
+            showSaved();
+            await renderWall();
+          } else {
+            console.error("Save error:", result.error);
+            alert("Failed to save. Check console.");
+          }
+        } catch (err) {
+          console.error("Save exception:", err);
+          alert("An error occurred. Check console.");
+        } finally {
+          saveBtn.disabled = false;
+          saveBtn.textContent = "Save";
+        }
+      });
+
+      // Show saved indicator
+      function showSaved() {
+        const el = document.getElementById("savedIndicator");
+        el.classList.add("show");
+        setTimeout(() => el.classList.remove("show"), 2200);
+      }
+
+      // Create cards
+      function createNoteCard(item) {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        if (item.type === "silent")
+          card.style.background = "rgba(249, 247, 243, 0.9)";
+        else if (item.type === "night")
+          card.style.background = "rgba(245, 242, 236, 0.9)";
+        else if (item.type === "sealed")
+          card.style.background = "rgba(252, 250, 244, 0.9)";
+
+        if (item.type !== "normal") {
+          const badge = document.createElement("div");
+          badge.className = `type-badge badge-${item.type}`;
+          badge.textContent =
+            item.type === "silent" ? "🤫" : item.type === "night" ? "🌙" : "🔒";
+          card.appendChild(badge);
+        }
+
+        if (item.type === "sealed") {
+          const today = new Date();
+          const unlock = new Date(item.unlock_date);
+          if (unlock > today) {
+            const div = document.createElement("div");
+            div.className = "sealed-placeholder";
+            const dateStr = new Date(item.unlock_date).toLocaleDateString(
+              "en-IN",
+              {
+                day: "numeric",
+                month: "short",
+              }
+            );
+            div.innerHTML = `<i>🔒</i><div>Is sandesh ko kholne ke liye<br>${dateStr} ka intezaar hai</div>`;
+            card.appendChild(div);
+          } else {
+            const content = document.createElement("div");
+            content.className = "note-content";
+            content.textContent = item.message;
+            card.appendChild(content);
+          }
+        } else {
+          const content = document.createElement("div");
+          content.className = "note-content";
+          content.textContent = item.message;
+          card.appendChild(content);
+        }
+        return card;
+      }
+
+      function createPoetryCard(item) {
+        const card = document.createElement("div");
+        card.className = "card poetry-card";
+        card.textContent = item.lines;
+        return card;
+      }
+
+      // Render wall
+      async function renderWall() {
+        wall.innerHTML = "<div class='empty-state'>Loading...</div>";
+
+        try {
+          const notesResult = await apiGet("?route=notes");
+          const poetryResult = await apiGet("?route=poetry");
+
+          const notes = notesResult.data || [];
+          const poetry = poetryResult.data || [];
+
+          const notesMapped = notes.map((n) => ({ ...n, source: "note" }));
+          const poetryMapped = poetry.map((p) => ({ ...p, source: "poetry" }));
+          const all = [...notesMapped, ...poetryMapped].sort(
+            (a, b) => new Date(b.created_at) - new Date(a.created_at)
+          );
+
+          wall.innerHTML = "";
+
+          if (all.length === 0) {
+            wall.innerHTML = `<div class="empty-state"><i>🕯️</i><p>यहाँ अभी खामोशी है...<br>पर तुम्हारी पहली बात इसे जीवंत कर देगी</p></div>`;
+            return;
+          }
+
+          all.forEach((item) => {
+            const card =
+              item.source === "poetry"
+                ? createPoetryCard(item)
+                : createNoteCard(item);
+            wall.appendChild(card);
+          });
+        } catch (err) {
+          console.error("Render error:", err);
+          wall.innerHTML = `<div class="empty-state">कनेक्शन में दिक्कत... कृपया बाद में कोशिश करें।</div>`;
+        }
+      }
+
+      // Realtime subscriptions
+      supabase
+        .channel("wall-updates")
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "notes" },
+          () => renderWall()
+        )
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "poetry" },
+          () => renderWall()
+        )
+        .subscribe();
+
+      // Particles
+      for (let i = 0; i < 10; i++) {
+        const p = document.createElement("div");
+        p.className = "particle";
+        p.style.left = `${Math.random() * 100}%`;
+        p.style.animationDelay = `${Math.random() * 20}s`;
+        p.style.animationDuration = `${20 + Math.random() * 10}s`;
+        document.body.appendChild(p);
+      }
+
+      // Initialize
+      console.log("Initializing app...");
+      renderWall();
+    </script>
+  </body>
 </html>
