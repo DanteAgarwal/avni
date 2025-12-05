@@ -660,9 +660,7 @@
 
       const supabaseUrl = "https://gwpydutbemgxxxbtxgmj.supabase.co";
       const supabaseAnonKey =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3cHlkdXRiZW1neHh4YnR4Z21qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1ODM1NTUsImV4cCI6MjA4MDE1OTU1NX0.YourAnonKeyHere"; // USE ANON KEY, NOT SERVICE ROLE!
-      const supabaseServiceKey =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3cHlkdXRiZW1neHh4YnR4Z21qIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NDU4MzU1NSwiZXhwIjoyMDgwMTU5NTU1fQ.9dz8Yd9zxp7qQXWtpZXrean1s9pbiavXjXImI5rxLZo";
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3cHlkdXRiZW1neHh4YnR4Z21qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1ODM1NTUsImV4cCI6MjA4MDE1OTU1NX0.PmIMiIsQtigqSUUeaAcKtmsYfE5ake6dvQMRO4YV91w"; // USE ANON KEY, NOT SERVICE ROLE!
 
       // Create client with ANON key for client-side operations
       const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -742,6 +740,10 @@
 
       let lastLatitude = null;
       let lastLongitude = null;
+      let offset = 0;
+      const PAGE_SIZE = 50;
+      let hasMore = true;
+      let isLoading = false;
 
       // DOM elements
       const wall = document.getElementById("wall");
@@ -936,7 +938,7 @@
             console.log("Visitor saved successfully");
             nicknameDisplay.textContent = `"${name}"`;
             verifyGate.style.display = "none";
-            await renderWall();
+            await renderWall(true);
           }
         } catch (err) {
           console.error("Enter error:", err);
@@ -1103,7 +1105,7 @@
             entryText.value = "";
             inputPanel.classList.remove("active");
             showSaved();
-            await renderWall();
+            await renderWall(true);
           } else {
             console.error("Save error:", result.error);
             alert("Failed to save. Check console.");
@@ -1182,27 +1184,46 @@
       }
 
       // Render wall
-      async function renderWall() {
-        wall.innerHTML = "<div class='empty-state'>Loading...</div>";
+      async function renderWall(reset = false) {
+        if (isLoading || !hasMore) return;
+        isLoading = true;
+
+        if (reset) {
+          offset = 0;
+          hasMore = true;
+          wall.innerHTML = "";
+        }
 
         try {
-          const notesResult = await apiGet("?route=notes");
-          const poetryResult = await apiGet("?route=poetry");
+          const notesResult = await apiGet(
+            `?route=notes&offset=${offset}&limit=${PAGE_SIZE}`
+          );
+          const poetryResult = await apiGet(
+            `?route=poetry&offset=${offset}&limit=${PAGE_SIZE}`
+          );
 
           const notes = notesResult.data || [];
           const poetry = poetryResult.data || [];
 
           const notesMapped = notes.map((n) => ({ ...n, source: "note" }));
           const poetryMapped = poetry.map((p) => ({ ...p, source: "poetry" }));
+
           const all = [...notesMapped, ...poetryMapped].sort(
             (a, b) => new Date(b.created_at) - new Date(a.created_at)
           );
 
-          wall.innerHTML = "";
-
-          if (all.length === 0) {
-            wall.innerHTML = `<div class="empty-state"><i>🕯️</i><p>यहाँ अभी खामोशी है...<br>पर तुम्हारी पहली बात इसे जीवंत कर देगी</p></div>`;
+          if (reset && all.length === 0) {
+            wall.innerHTML = `
+        <div class="empty-state">
+          <i>🕯️</i>
+          <p>यहाँ अभी खामोशी है...<br>पर तुम्हारी पहली बात इसे जीवंत कर देगी</p>
+        </div>`;
+            isLoading = false;
             return;
+          }
+
+          if (all.length < PAGE_SIZE) {
+            hasMore = false; // No more data on server
           }
 
           all.forEach((item) => {
@@ -1212,9 +1233,12 @@
                 : createNoteCard(item);
             wall.appendChild(card);
           });
+
+          offset += PAGE_SIZE;
         } catch (err) {
           console.error("Render error:", err);
-          wall.innerHTML = `<div class="empty-state">कनेक्शन में दिक्कत... कृपया बाद में कोशिश करें।</div>`;
+        } finally {
+          isLoading = false;
         }
       }
 
@@ -1224,12 +1248,12 @@
         .on(
           "postgres_changes",
           { event: "*", schema: "public", table: "notes" },
-          () => renderWall()
+          () => renderWall(true)
         )
         .on(
           "postgres_changes",
           { event: "*", schema: "public", table: "poetry" },
-          () => renderWall()
+          () => renderWall(true)
         )
         .subscribe();
 
@@ -1242,7 +1266,21 @@
         p.style.animationDuration = `${20 + Math.random() * 10}s`;
         document.body.appendChild(p);
       }
+      window.addEventListener("scroll", () => {
+        const nearBottom =
+          window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 200;
 
+        if (nearBottom) {
+          renderWall(false);
+        }
+      });
+      if (isLoading) {
+        wall.insertAdjacentHTML(
+          "beforeend",
+          `<div style="text-align:center; opacity:0.6; padding:10px;">Loading...</div>`
+        );
+      }
       // Initialize
       console.log("Initializing app...");
       renderWall();
