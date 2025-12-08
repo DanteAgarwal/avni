@@ -1,0 +1,461 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --gold: #d4af37;
+  --gold-light: #e6c985;
+  --text: #3a3530;
+  --text-light: #6b655f;
+  --glass-bg: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(212, 175, 55, 0.3);
+}
+
+body {
+  background: linear-gradient(135deg, #f0e9e1 0%, #e2dcd3 100%);
+  font-family: "Inter", sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+  padding: 16px 12px 90px;
+  position: relative;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.particle {
+  position: fixed;
+  width: 2px;
+  height: 2px;
+  background: var(--gold-light);
+  border-radius: 50%;
+  opacity: 0.4;
+  pointer-events: none;
+  animation: float 20s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(80px);
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 0 8px;
+}
+
+.nickname-display {
+  background: white;
+  border: 1px solid var(--glass-border);
+  border-radius: 50px;
+  padding: 10px 20px;
+  display: inline-block;
+  font-family: "Playfair Display", serif;
+  font-size: 18px;
+  color: var(--gold);
+  margin-bottom: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: transform 0.3s;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+h1 {
+  font-family: "Playfair Display", serif;
+  font-weight: 600;
+  font-size: 26px;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+/* Desktop Grid */
+.wall {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 6px;
+}
+
+@media (min-width: 768px) {
+  .wall {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+    padding: 0;
+  }
+  body {
+    padding: 24px 16px 80px;
+  }
+  h1 {
+    font-size: 32px;
+  }
+  .nickname-display {
+    font-size: 20px;
+    padding: 10px 24px;
+  }
+}
+
+.card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.07);
+  min-height: 160px;
+}
+
+@media (min-width: 768px) {
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+    border-color: rgba(212, 175, 55, 0.4);
+  }
+}
+
+/* Badges */
+.type-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 600;
+  z-index: 2;
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--gold);
+}
+.badge-silent {
+  background: #f0f0f0;
+  color: #777;
+}
+.badge-night {
+  background: #e9e4f0;
+  color: #6b5b95;
+}
+.badge-sealed {
+  background: #fff5e6;
+  color: var(--gold);
+}
+
+/* Content */
+.note-content {
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 15px;
+  position: relative;
+  word-break: break-word;
+}
+.note-content::before {
+  content: '"';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  font-size: 40px;
+  color: rgba(212, 175, 55, 0.08);
+  font-family: Georgia, serif;
+}
+
+.poetry-card {
+  font-family: "Playfair Display", serif;
+  font-size: 17px;
+  color: var(--text);
+  line-height: 1.8;
+  letter-spacing: 0.4px;
+  position: relative;
+  word-break: break-word;
+}
+.poetry-card::before {
+  content: "✍️";
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 18px;
+  opacity: 0.15;
+}
+.poetry-card::after {
+  content: "— जो ज़ुबान नहीं कह पाई";
+  display: block;
+  margin-top: 14px;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  color: var(--text-light);
+  font-style: italic;
+  text-align: right;
+}
+
+/* Sealed */
+.sealed-placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  color: var(--text-light);
+  padding: 10px;
+}
+.sealed-placeholder i {
+  font-size: 36px;
+  margin-bottom: 10px;
+  opacity: 0.7;
+}
+
+/* Empty */
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--text-light);
+}
+.empty-state i {
+  font-size: 40px;
+  opacity: 0.6;
+  display: block;
+  margin-bottom: 16px;
+}
+
+/* Universal Input Panel */
+.input-modal {
+  position: fixed;
+  z-index: 1000;
+}
+
+/* Mobile: Bottom Sheet */
+@media (max-width: 767px) {
+  .input-modal {
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 60px;
+    height: 60px;
+    z-index: 1001;
+  }
+  .input-panel {
+    background: white;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    padding: 20px 16px 24px;
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .input-panel.active {
+    transform: translateY(0);
+  }
+}
+
+/* Desktop: Floating Panel */
+@media (min-width: 768px) {
+  .input-modal {
+    bottom: 20px;
+    right: 20px;
+  }
+  .fab {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: white;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.4);
+    transition: all 0.3s;
+    z-index: 1001;
+  }
+  .fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
+  }
+  .input-panel {
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    width: 360px;
+    background: white;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    transform: translateY(20px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s;
+  }
+  .input-panel.active {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.input-panel h3 {
+  font-family: "Playfair Display", serif;
+  font-size: 18px;
+  margin-bottom: 14px;
+  color: var(--text);
+  text-align: center;
+}
+
+.mode-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  background: #f9f7f3;
+  padding: 6px;
+  border-radius: 12px;
+}
+.mode-tab {
+  flex: 1;
+  padding: 10px 4px;
+  font-size: 14px;
+  border: none;
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.mode-tab.active {
+  background: var(--gold);
+  color: white;
+}
+
+.type-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.type-btn {
+  padding: 6px 14px;
+  font-size: 13px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.type-btn.active {
+  border-color: var(--gold);
+  background: rgba(212, 175, 55, 0.15);
+  font-weight: 600;
+  color: var(--gold);
+}
+
+textarea,
+input {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ddd;
+  border-radius: 14px;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  margin-bottom: 16px;
+  transition: border 0.3s;
+}
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+textarea:focus,
+input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+}
+
+.btn-row {
+  display: flex;
+  gap: 12px;
+}
+.btn {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-outline {
+  background: #f8f6f2;
+  color: var(--text);
+}
+.btn-fill {
+  background: var(--gold);
+  color: white;
+}
+.btn:hover {
+  opacity: 0.95;
+}
+
+.saved-indicator {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #4caf50;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-size: 15px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateX(120px);
+  transition: all 0.4s;
+  z-index: 2000;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+}
+.saved-indicator.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Safe areas for iPhone */
+@supports (padding-top: env(safe-area-inset-top)) {
+  @media (max-width: 767px) {
+    body {
+      padding-bottom: calc(90px + env(safe-area-inset-bottom));
+    }
+    .fab {
+      bottom: calc(24px + env(safe-area-inset-bottom));
+    }
+  }
+}
