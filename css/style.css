@@ -459,3 +459,32 @@ input:focus {
     }
   }
 }
+
+/* Gate overlay — ensure centered on all viewports */
+#verifyGate.verify-gate {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  z-index: 99999;
+}
+
+#verifyGate.verify-gate .gate-inner {
+  width: 90%;
+  max-width: 370px;
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+#verifyGate.verify-gate video#camPreview {
+  /* Keep preview tiny but visible to satisfy browsers */
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0.01 !important;
+}

@@ -198,7 +198,8 @@ export function initGate() {
   const hasSession = checkExistingSession();
   
   if (!hasSession) {
-    verifyGate.style.display = "block";
+    // show as flex so centering rules apply
+    verifyGate.style.display = "flex";
   }
 }
 

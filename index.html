@@ -16,30 +16,8 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <div
-      id="verifyGate"
-      style="
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(6px);
-        z-index: 9999;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      "
-    >
-      <div
-        style="
-          width: 90%;
-          max-width: 370px;
-          background: white;
-          border-radius: 20px;
-          padding: 24px;
-          text-align: center;
-          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-        "
-      >
+    <div id="verifyGate" class="verify-gate">
+      <div class="gate-inner">
         <h2
           style="
             font-family: 'Playfair Display', serif;
@@ -80,7 +58,7 @@
             font-weight: 600;
           "
         >
-          📍 Verify Location
+          📍 Verify not BOT
         </button>
         <div
           id="locStatus"
@@ -101,7 +79,7 @@
             font-weight: 600;
           "
         >
-          🤳 Start Face Check
+          🤳 Start User Check
         </button>
         <div
           id="camStatus"
